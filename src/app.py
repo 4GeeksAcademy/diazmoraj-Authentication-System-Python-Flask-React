@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -75,14 +75,23 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
-@app.route("api/login", methods=["POST"])
+@app.route('/login', methods=['POST'])
 def login():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    if username != "test" or password != "test":
-        return jsonify({"msg": "Bad username or password"}), 401
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Body is empty"}), 400
+    if 'email' not in body:
+        return jsonify({"msg": "Field email is necesary"}), 400
+    if 'password' not in body:
+        return jsonify({"msg": "Field password is necesary"}), 400
+    user = User.query.filter_by(email=body['email']).all()
+    if len(user) == 0:
+        return jsonify({'msg': 'User or Password invalid'}), 400
+    # username = request.json.get("username", None)
+    # password = request.json.get("password", None)
+    # if username != "test" or password != "test":
+    return jsonify({"msg": "Ok"}), 200
     
-
     access_token = create_access_token(identity=username)
     return jsonify(access_token = access_token)
 
