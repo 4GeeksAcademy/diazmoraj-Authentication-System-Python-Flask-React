@@ -110,7 +110,7 @@ def login():
     user = User.query.filter_by(email=body['email']).all()
     if len(user) == 0:
         return jsonify({'msg': 'User or Password invalid'}), 400
-    correct_password = bcrypt.check_password_hash(user[0].password, body['password'])
+    correct_password = (bcrypt.check_password_hash(user[0].password, body['password']))
     if correct_password is False:
         return jsonify({'msg': 'User or Password invalid'}), 400
     access_token = create_access_token(identity=user[0].email)
