@@ -16,6 +16,8 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+from flask_bcrypt import Bcrypt
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -26,6 +28,8 @@ app.url_map.strict_slashes = False
 
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT-KEY")
 jwt = JWTManager(app)
+
+bcrypt = Bcrypt(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -75,7 +79,7 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
     if body is None:
@@ -87,14 +91,16 @@ def login():
     user = User.query.filter_by(email=body['email']).all()
     if len(user) == 0:
         return jsonify({'msg': 'User or Password invalid'}), 400
-    # username = request.json.get("username", None)
-    # password = request.json.get("password", None)
-    # if username != "test" or password != "test":
-    return jsonify({"msg": "Ok"}), 200
+    if user[0].password != body['password']:
+        return jsonify({'msg': 'User or Password invalid'}), 400
+    access_token = create_access_token(identity=user[0].email)
+    return jsonify({'msj': 'Ok', 'Access Token': access_token}), 200
     
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token = access_token)
-
+@app.route('/api/private', methods=['GET'])
+@jwt_required()
+def private():
+    identity = get_jwt_identity()
+    return jsonify({'msg': 'This is a private message'})
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
