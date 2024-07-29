@@ -79,6 +79,25 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Body is empty"}), 400
+    if 'email' not in body:
+        return jsonify({"msg": "Field email is necesary"}), 400
+    if 'password' not in body:
+        return jsonify({"msg": "Field password is necesary"}), 400
+    new_user = User()
+    new_user.email = body['email']
+    new_user.password = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    new_user.is_active = True
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'msg': 'User created'}), 201
+
 @app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
@@ -91,7 +110,8 @@ def login():
     user = User.query.filter_by(email=body['email']).all()
     if len(user) == 0:
         return jsonify({'msg': 'User or Password invalid'}), 400
-    if user[0].password != body['password']:
+    correct_password = bcrypt.check_password_hash(user[0].password, body['password'])
+    if correct_password is False:
         return jsonify({'msg': 'User or Password invalid'}), 400
     access_token = create_access_token(identity=user[0].email)
     return jsonify({'msj': 'Ok', 'Access Token': access_token}), 200
