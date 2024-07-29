@@ -1,40 +1,28 @@
-import React, { useState, useContext } from "react";
+import React, { useState, Component, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import { ConcatenationScope } from "webpack";
 
-const Login = () => {
+const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-}
 
-const handleLogin = () => {
-    let loginsucess = false;
-    fetch("https://obscure-space-giggle-7j6pqr7944x2xvr9-3001.app.github.dev/api/login",
-        {
-            method: "POST",
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-            headers: { "Content-Type": application / json },
-        })
-        .then((response) => {
-            if (response.ok) {
-                loginsucess = true;
-                return response.json();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const isCreated = await fetch('https://obscure-space-giggle-7j6pqr7944x2xvr9-3001.app.github.dev/api/signup',
+            {
+                method: 'POST',
+                headers: { "Content-Type": "applications/json" },
+                body: JSON.stringify({ email, password }),
             }
-        })
-        .then((data) => {
-            sessionStorage.setItem("token", data.access_token);
-            if (loginsucess) {
-                navigate("/api/private");
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-            alert("User or Password invalid")
-        })
+        );
+        if (isCreated.ok) {
+            navigate("/api/login");
+        } else {
+            console.error("Register failed")
+        }
+    }
 
     return (
         <div className="d-flex flex-column justify-content-between min-vh-100" style={{ backgroundColor: "#f8f9fa", margin: "0" }}>
@@ -45,8 +33,8 @@ const handleLogin = () => {
                 </div>
             </div>
             <div className="d-flex flex-column justify-content-center align-items-center" style={{ flexGrow: 1 }}>
-                <form onSubmit={handleLogin} className="mt-5 p-5 bg-white registerForm d-flex flex-column justify-content-center" style={{ maxWidth: "400px", width: "100%", marginBottom: "5rem", border: '1px solid #5751e1' }}>
-                    <h3 className="mb-3 portraitSecundaryColor text-center">Login</h3>
+                <form onSubmit={handleSubmit} className="mt-5 p-5 bg-white registerForm d-flex flex-column justify-content-center" style={{ maxWidth: "400px", width: "100%", marginBottom: "5rem", border: '1px solid #5751e1' }}>
+                    <h3 className="mb-3 portraitSecundaryColor text-center">Signup</h3>
                     <div className="mb-3 mt-3">
                         <input
                             type="email"
@@ -77,7 +65,7 @@ const handleLogin = () => {
                     </div>
                     <div className="textRegister mt-3">
                         <Link to='/signup'>
-                            <span className="portraitSecundaryColor text-center" style={{ fontSize: '15px' }}>¿Todavía no tienes cuenta? Registrate aquí</span>
+                            <span className="portraitSecundaryColor text-center" style={{ fontSize: '15px' }}>Register Success</span>
                         </Link>
                     </div>
                 </form>
@@ -85,5 +73,3 @@ const handleLogin = () => {
         </div>
     )
 }
-
-export default Login;
