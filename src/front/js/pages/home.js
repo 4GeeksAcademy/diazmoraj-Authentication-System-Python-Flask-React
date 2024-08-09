@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
+import { Link } from "react-router-dom";
 import "../../styles/home.css";
 
 export const Home = () => {
@@ -10,10 +11,10 @@ export const Home = () => {
 		<div className="text-center mt-5">
 			<div>
 				<h1 className="mb-4">Welcome to my app</h1>
-				<Link to="/api/login">
+				<Link to="/login">
 					<buttom className="btn btn-primary me-4">Log In</buttom>
 				</Link>
-				<Link to="/api/signup">
+				<Link to="/signup">
 					<buttom className="btn btn-success">Sign Up</buttom>
 				</Link>
 			</div>

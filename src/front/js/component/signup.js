@@ -1,7 +1,7 @@
 import React, { useState, Component, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
-import { ConcatenationScope } from "webpack";
+// import { ConcatenationScope } from "webpack";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -59,9 +59,9 @@ const Signup = () => {
                     </div>
                     <div className="mb-4 mt-2 d-flex flex-row justify-content-center gap-5">
                         <Link to='/'>
-                            <MultiButtonNew color="purple" text="Atras" width="80" Btype='button' />
+                            <button color="purple" text="Atras" width="80" Btype='button'>Back</button>
                         </Link>
-                        <MultiButtonNew color="orange" text="Inicia sesión" width="120" Btype='submit' />
+                        <button color="orange" text="Inicia sesión" width="120" Btype='submit'>Save</button>
                     </div>
                     <div className="textRegister mt-3">
                         <Link to='/signup'>

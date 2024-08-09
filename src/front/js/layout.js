@@ -11,7 +11,7 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import Signup from "./component/signup";
-import Private from "./component/private";
+// import Private from "./component/private";
 import Login from "./component/login";
 
 //create your first component
