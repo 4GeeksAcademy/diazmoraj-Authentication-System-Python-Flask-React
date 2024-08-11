@@ -12,10 +12,10 @@ export const Home = () => {
 			<div>
 				<h1 className="mb-4">Welcome to my app</h1>
 				<Link to="/login">
-					<buttom className="btn btn-primary me-4">Log In</buttom>
+					<button className="btn btn-primary me-4">Log In</button>
 				</Link>
 				<Link to="/signup">
-					<buttom className="btn btn-success">Sign Up</buttom>
+					<button className="btn btn-success">Sign Up</button>
 				</Link>
 			</div>
 		</div>
