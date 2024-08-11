@@ -118,7 +118,7 @@ def login():
     access_token = create_access_token(identity=user[0].email)
     return jsonify({'msj': 'Ok', 'Access Token': access_token}), 200
     
-@app.route('/api/private', methods=['GET'])
+@app.route('/api/info', methods=['GET'])
 @jwt_required()
 def private():
     identity = get_jwt_identity()

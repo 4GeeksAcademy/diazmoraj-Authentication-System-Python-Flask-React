@@ -11,7 +11,7 @@ const Info = () => {
         if (!sessionStorage.getItem("token")) {
             navigate("/login");
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="text-center mt-5">
